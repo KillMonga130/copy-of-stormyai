@@ -136,50 +136,48 @@ body {
     background: var(--color-bg);
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
-    padding: var(--space-4);
+    padding: var(--space-3);
     margin-bottom: var(--space-3);
 }
 
 .search-label {
     display: block;
-    font-size: var(--text-lg);
-    font-weight: 600;
+    font-size: var(--text-sm);
+    font-weight: 500;
     margin-bottom: var(--space-2);
     color: var(--color-text);
-}
-
-.search-hint {
-    display: block;
-    font-size: var(--text-sm);
-    font-weight: 400;
-    color: var(--color-text-secondary);
-    margin-top: var(--space-1);
 }
 
 .search-bar {
     display: flex;
     gap: var(--space-2);
+    margin-bottom: var(--space-2);
 }
 
 .search-input {
     flex: 1;
-    padding: 0 var(--space-3);
-    height: 56px;
-    font-size: var(--text-lg);
+    padding: 0 var(--space-2);
+    height: 40px;
+    font-size: var(--text-base);
     font-family: inherit;
-    border: 2px solid var(--color-border);
+    border: 1px solid var(--color-border);
     border-radius: var(--radius);
     background: var(--color-bg);
-    transition: border-color 0.15s;
 }
 
 .search-input:focus {
     outline: none;
-    border-color: var(--color-primary);
+    border-color: var(--color-text);
 }
 
 .search-input::placeholder {
     color: var(--color-text-tertiary);
+}
+
+.search-help {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    margin: 0;
 }
 
 /* Platform Selector */
@@ -187,7 +185,7 @@ body {
     background: var(--color-bg);
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
-    padding: var(--space-4);
+    padding: var(--space-3);
     margin-bottom: var(--space-3);
 }
 
@@ -195,48 +193,53 @@ body {
     display: flex;
     gap: var(--space-2);
     flex-wrap: wrap;
-    margin-bottom: var(--space-2);
 }
 
 .platform-btn {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: var(--space-1);
-    padding: var(--space-2) var(--space-3);
-    background: var(--color-bg-secondary);
-    border: 2px solid var(--color-border);
+    justify-content: space-between;
+    gap: var(--space-2);
+    padding: var(--space-2);
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
     border-radius: var(--radius);
     cursor: pointer;
-    transition: all 0.15s;
     font-family: inherit;
     font-size: var(--text-sm);
-    min-width: 100px;
+    min-width: 120px;
 }
 
 .platform-btn:hover {
-    border-color: var(--color-primary);
-    background: var(--color-bg);
+    background: var(--color-bg-secondary);
 }
 
 .platform-btn.active {
-    border-color: var(--color-primary);
-    background: var(--color-primary);
+    border-color: var(--color-text);
+    background: var(--color-text);
+    color: var(--color-bg);
+}
+
+.platform-badge {
+    font-size: var(--text-xs);
+    padding: 2px var(--space-1);
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+.platform-badge.working {
+    background: #10b981;
     color: white;
 }
 
-.platform-icon {
-    font-size: 24px;
+.platform-badge.limited {
+    background: #f59e0b;
+    color: white;
 }
 
-.platform-status {
-    font-size: var(--text-xs);
-}
-
-.platform-note {
-    font-size: var(--text-xs);
-    color: var(--color-text-tertiary);
-    margin: 0;
+.platform-badge.inactive {
+    background: var(--color-border);
+    color: var(--color-text-secondary);
 }
 
 /* Advanced Filters */
@@ -330,11 +333,6 @@ body {
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
     padding: var(--space-3);
-    transition: box-shadow 0.15s;
-}
-
-.creator-card:hover {
-    box-shadow: var(--shadow);
 }
 
 .creator-header {
@@ -407,6 +405,26 @@ body {
     border-radius: 4px;
     font-size: var(--text-xs);
     color: var(--color-text-secondary);
+}
+
+.tag-verified {
+    background: var(--color-text);
+    color: var(--color-bg);
+    border-color: var(--color-text);
+}
+
+.results-info {
+    padding: var(--space-2);
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    margin-bottom: var(--space-3);
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+}
+
+.results-info-mock {
+    background: var(--color-bg-secondary);
 }
 
 .creator-actions {
@@ -642,22 +660,24 @@ body {
 /* Empty state */
 .empty-state {
     text-align: center;
-    padding: var(--space-8);
-    color: var(--color-text-secondary);
+    padding: var(--space-6);
     background: var(--color-bg);
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
 }
 
 .empty-state h3 {
-    font-size: var(--text-2xl);
+    font-size: var(--text-xl);
+    font-weight: 600;
     color: var(--color-text);
     margin-bottom: var(--space-2);
 }
 
-.empty-state p {
+.empty-state p,
+.empty-state-text {
     font-size: var(--text-base);
-    line-height: 1.6;
+    color: var(--color-text-secondary);
+    margin: 0;
 }
 
 /* Responsive */

@@ -44,21 +44,19 @@
             <div id="search-view" class="view active">
                 <div class="view-header">
                     <div>
-                        <h1 class="view-title">Find Creators</h1>
-                        <p class="view-description">Search real influencers across YouTube, TikTok, Instagram, and more</p>
+                        <h1 class="view-title">Creator Search</h1>
+                        <p class="view-description">Search by niche, topic, or creator name</p>
                     </div>
                 </div>
 
                 <!-- Search Box -->
                 <div class="search-box">
-                    <label class="search-label">
-                        What are you looking for?
-                        <span class="search-hint">Try: "tech review", "fitness", "gaming", "fashion"</span>
-                    </label>
+                    <label class="search-label">Search Query</label>
                     <div class="search-bar">
-                        <input type="text" id="search-input" class="search-input" placeholder='e.g. "tech review" or "fitness influencer"'>
+                        <input type="text" id="search-input" class="search-input" placeholder="tech review">
                         <button id="search-btn" class="btn btn-primary">Search</button>
                     </div>
+                    <p class="search-help">Examples: tech review, fitness, gaming, fashion blogger</p>
                 </div>
 
                 <!-- Platform Selector -->
@@ -66,31 +64,25 @@
                     <label class="filter-label">Platform</label>
                     <div class="platform-buttons">
                         <button class="platform-btn active" data-platform="youtube">
-                            <span class="platform-icon">📺</span>
                             <span>YouTube</span>
-                            <span class="platform-status">✓</span>
+                            <span class="platform-badge working">Active</span>
                         </button>
                         <button class="platform-btn" data-platform="tiktok">
-                            <span class="platform-icon">🎵</span>
                             <span>TikTok</span>
-                            <span class="platform-status">⚠️</span>
+                            <span class="platform-badge limited">Limited</span>
                         </button>
                         <button class="platform-btn" data-platform="instagram">
-                            <span class="platform-icon">📸</span>
                             <span>Instagram</span>
-                            <span class="platform-status">⚠️</span>
+                            <span class="platform-badge limited">Limited</span>
                         </button>
                         <button class="platform-btn" data-platform="twitch">
-                            <span class="platform-icon">🎮</span>
                             <span>Twitch</span>
-                            <span class="platform-status">⏳</span>
+                            <span class="platform-badge inactive">Setup Required</span>
                         </button>
                         <button class="platform-btn" data-platform="all">
-                            <span class="platform-icon">🌐</span>
-                            <span>All</span>
+                            <span>All Platforms</span>
                         </button>
                     </div>
-                    <p class="platform-note">✓ = Working | ⚠️ = Limited | ⏳ = Needs setup</p>
                 </div>
 
                 <!-- Advanced Filters (Collapsible) -->

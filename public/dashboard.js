@@ -87,14 +87,13 @@ function displayResults(creators, source = 'unknown', platforms = []) {
     const resultsContainer = document.getElementById('search-results');
     
     if (creators.length === 0) {
-        resultsContainer.innerHTML = '<div class="empty-state">No creators found. Try adjusting your filters.</div>';
+        resultsContainer.innerHTML = '<div class="empty-state"><p class="empty-state-text">No creators found. Try different search terms.</p></div>';
         return;
     }
     
-    const platformList = platforms.length > 0 ? platforms.join(', ') : 'multiple platforms';
     const sourceIndicator = source === 'real' 
-        ? `<div style="padding: 12px; background: #10b981; color: white; border-radius: 8px; margin-bottom: 16px; font-weight: 500;">✓ Showing REAL data from ${platformList}</div>`
-        : '<div style="padding: 12px; background: #f59e0b; color: white; border-radius: 8px; margin-bottom: 16px; font-weight: 500;">⚠️ Showing mock data (search with a query for real data)</div>';
+        ? `<div class="results-info">Showing ${creators.length} results from live data</div>`
+        : '<div class="results-info results-info-mock">Showing sample data. Search YouTube for live results.</div>';
     
     resultsContainer.innerHTML = sourceIndicator + creators.map(creator => `
         <div class="creator-card">
@@ -110,8 +109,7 @@ function displayResults(creators, source = 'unknown', platforms = []) {
                 <span class="tag">${creator.platform}</span>
                 <span class="tag">${creator.niche}</span>
                 <span class="tag">${creator.country}</span>
-                ${creator.verified ? '<span class="tag">✓ Verified</span>' : ''}
-                ${creator.isReal ? '<span class="tag" style="background: #10b981; color: white; border: none;">🔴 LIVE</span>' : ''}
+                ${creator.verified ? '<span class="tag tag-verified">Verified</span>' : ''}
             </div>
             <div class="creator-stats">
                 <div class="creator-stat">
@@ -249,18 +247,9 @@ function viewProfile(creatorId) {
     alert(`Profile view for creator ${creatorId} - Full profile page would open here`);
 }
 
-// Initial load - show helpful empty state
+// Initial load - show clean empty state
 document.getElementById('search-results').innerHTML = `
     <div class="empty-state">
-        <h3>👋 Ready to find creators?</h3>
-        <p>Enter what you're looking for in the search box above.</p>
-        <div style="margin-top: 24px; padding: 16px; background: #f0f9ff; border-radius: 8px; text-align: left;">
-            <p style="font-weight: 600; margin-bottom: 8px;">💡 Try these searches:</p>
-            <p style="margin: 4px 0;">• "tech review" - Find tech reviewers</p>
-            <p style="margin: 4px 0;">• "fitness" - Find fitness influencers</p>
-            <p style="margin: 4px 0;">• "gaming" - Find gaming creators</p>
-            <p style="margin: 4px 0;">• "fashion" - Find fashion influencers</p>
-        </div>
-        <p style="margin-top: 16px; color: #10b981; font-weight: 500;">✓ YouTube is connected - you'll see real data!</p>
+        <p class="empty-state-text">Enter a search query to find creators</p>
     </div>
 `;
