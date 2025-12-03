@@ -43,40 +43,83 @@
             <!-- Search View -->
             <div id="search-view" class="view active">
                 <div class="view-header">
-                    <h1 class="view-title">Search Creators</h1>
-                    <p class="view-description">Find the perfect influencers for your campaign</p>
+                    <div>
+                        <h1 class="view-title">Find Creators</h1>
+                        <p class="view-description">Search real influencers across YouTube, TikTok, Instagram, and more</p>
+                    </div>
                 </div>
 
-                <div class="search-section">
+                <!-- Search Box -->
+                <div class="search-box">
+                    <label class="search-label">
+                        What are you looking for?
+                        <span class="search-hint">Try: "tech review", "fitness", "gaming", "fashion"</span>
+                    </label>
                     <div class="search-bar">
-                        <input type="text" id="search-input" class="search-input" placeholder="Describe your ideal creator...">
+                        <input type="text" id="search-input" class="search-input" placeholder='e.g. "tech review" or "fitness influencer"'>
                         <button id="search-btn" class="btn btn-primary">Search</button>
                     </div>
-
-                    <div class="filters">
-                        <select id="platform-filter" class="filter-select">
-                            <option value="all">All platforms</option>
-                            <option value="youtube">YouTube</option>
-                            <option value="tiktok">TikTok</option>
-                            <option value="linkedin">LinkedIn</option>
-                            <option value="instagram">Instagram</option>
-                            <option value="twitch">Twitch</option>
-                        </select>
-
-                        <input type="number" id="min-followers" class="filter-input" placeholder="Min followers">
-                        <input type="number" id="max-followers" class="filter-input" placeholder="Max followers">
-
-                        <select id="country-filter" class="filter-select">
-                            <option value="all">All countries</option>
-                            <option value="US">United States</option>
-                            <option value="UK">United Kingdom</option>
-                            <option value="Canada">Canada</option>
-                            <option value="Australia">Australia</option>
-                            <option value="Germany">Germany</option>
-                        </select>
-                    </div>
                 </div>
 
+                <!-- Platform Selector -->
+                <div class="platform-selector">
+                    <label class="filter-label">Platform</label>
+                    <div class="platform-buttons">
+                        <button class="platform-btn active" data-platform="youtube">
+                            <span class="platform-icon">📺</span>
+                            <span>YouTube</span>
+                            <span class="platform-status">✓</span>
+                        </button>
+                        <button class="platform-btn" data-platform="tiktok">
+                            <span class="platform-icon">🎵</span>
+                            <span>TikTok</span>
+                            <span class="platform-status">⚠️</span>
+                        </button>
+                        <button class="platform-btn" data-platform="instagram">
+                            <span class="platform-icon">📸</span>
+                            <span>Instagram</span>
+                            <span class="platform-status">⚠️</span>
+                        </button>
+                        <button class="platform-btn" data-platform="twitch">
+                            <span class="platform-icon">🎮</span>
+                            <span>Twitch</span>
+                            <span class="platform-status">⏳</span>
+                        </button>
+                        <button class="platform-btn" data-platform="all">
+                            <span class="platform-icon">🌐</span>
+                            <span>All</span>
+                        </button>
+                    </div>
+                    <p class="platform-note">✓ = Working | ⚠️ = Limited | ⏳ = Needs setup</p>
+                </div>
+
+                <!-- Advanced Filters (Collapsible) -->
+                <details class="advanced-filters">
+                    <summary class="filters-toggle">Advanced Filters</summary>
+                    <div class="filters-content">
+                        <div class="filter-group">
+                            <label class="filter-label">Follower Range</label>
+                            <div class="filter-row">
+                                <input type="number" id="min-followers" class="filter-input" placeholder="Min (e.g. 10000)">
+                                <span class="filter-separator">to</span>
+                                <input type="number" id="max-followers" class="filter-input" placeholder="Max (e.g. 1000000)">
+                            </div>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Country</label>
+                            <select id="country-filter" class="filter-select">
+                                <option value="all">All countries</option>
+                                <option value="US">United States</option>
+                                <option value="UK">United Kingdom</option>
+                                <option value="CA">Canada</option>
+                                <option value="AU">Australia</option>
+                                <option value="DE">Germany</option>
+                            </select>
+                        </div>
+                    </div>
+                </details>
+
+                <!-- Results -->
                 <div id="search-results" class="results-grid"></div>
             </div>
 
@@ -96,31 +139,10 @@
                     <h1 class="view-title">Analytics</h1>
                 </div>
 
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-label">Total Reach</div>
-                        <div class="stat-value">2.4M</div>
-                        <div class="stat-change positive">+12.5%</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Engagement Rate</div>
-                        <div class="stat-value">4.8%</div>
-                        <div class="stat-change positive">+0.3%</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Active Campaigns</div>
-                        <div class="stat-value">3</div>
-                        <div class="stat-change">—</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Total Spent</div>
-                        <div class="stat-value">$12,450</div>
-                        <div class="stat-change">This month</div>
-                    </div>
-                </div>
-
-                <div class="chart-placeholder">
-                    <p>📊 Campaign performance charts would appear here</p>
+                <div class="empty-state">
+                    <h3>📊 Analytics Coming Soon</h3>
+                    <p>Create campaigns and add creators to see performance analytics here.</p>
+                    <p style="margin-top: 16px;">Track reach, engagement, ROI, and more once you start running campaigns.</p>
                 </div>
             </div>
         </main>

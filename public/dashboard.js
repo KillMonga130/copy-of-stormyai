@@ -32,6 +32,17 @@ function switchView(viewName) {
     }
 }
 
+// Platform selector
+let selectedPlatform = 'youtube';
+
+document.querySelectorAll('.platform-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.platform-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedPlatform = btn.dataset.platform;
+    });
+});
+
 // Search functionality
 document.getElementById('search-btn').addEventListener('click', performSearch);
 document.getElementById('search-input').addEventListener('keypress', (e) => {
@@ -40,7 +51,13 @@ document.getElementById('search-input').addEventListener('keypress', (e) => {
 
 async function performSearch() {
     const query = document.getElementById('search-input').value;
-    const platform = document.getElementById('platform-filter').value;
+    
+    if (!query.trim()) {
+        alert('Please enter a search query');
+        return;
+    }
+    
+    const platform = selectedPlatform;
     const minFollowers = document.getElementById('min-followers').value;
     const maxFollowers = document.getElementById('max-followers').value;
     const country = document.getElementById('country-filter').value;
@@ -232,11 +249,18 @@ function viewProfile(creatorId) {
     alert(`Profile view for creator ${creatorId} - Full profile page would open here`);
 }
 
-// Initial load - show empty state instead of mock data
+// Initial load - show helpful empty state
 document.getElementById('search-results').innerHTML = `
     <div class="empty-state">
-        <h3>🔍 Search for Creators</h3>
-        <p>Enter a search query above to find real influencers from YouTube, TikTok, Instagram, and more!</p>
-        <p style="margin-top: 16px; color: #10b981; font-weight: 500;">✓ YouTube integration active - search to see real data!</p>
+        <h3>👋 Ready to find creators?</h3>
+        <p>Enter what you're looking for in the search box above.</p>
+        <div style="margin-top: 24px; padding: 16px; background: #f0f9ff; border-radius: 8px; text-align: left;">
+            <p style="font-weight: 600; margin-bottom: 8px;">💡 Try these searches:</p>
+            <p style="margin: 4px 0;">• "tech review" - Find tech reviewers</p>
+            <p style="margin: 4px 0;">• "fitness" - Find fitness influencers</p>
+            <p style="margin: 4px 0;">• "gaming" - Find gaming creators</p>
+            <p style="margin: 4px 0;">• "fashion" - Find fashion influencers</p>
+        </div>
+        <p style="margin-top: 16px; color: #10b981; font-weight: 500;">✓ YouTube is connected - you'll see real data!</p>
     </div>
 `;
