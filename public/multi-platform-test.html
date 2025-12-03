@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Platform Test - Stormy AI</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #fafafa;
+        }
+        h1 { color: #0066ff; }
+        .platform-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .platform-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e5e5e5;
+        }
+        .platform-card h2 {
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        button {
+            background: #0066ff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            width: 100%;
+            margin-top: 10px;
+        }
+        button:hover { background: #0052cc; }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .success { color: #10b981; font-weight: 600; }
+        .error { color: #ef4444; font-weight: 600; }
+        .warning { color: #f59e0b; font-weight: 600; }
+        .status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        .status.working { background: #10b981; color: white; }
+        .status.partial { background: #f59e0b; color: white; }
+        .status.pending { background: #6b7280; color: white; }
+        input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🌐 Multi-Platform Real Data Test</h1>
+    <p>Test real data fetching from multiple platforms</p>
+
+    <div class="platform-grid">
+        <!-- YouTube -->
+        <div class="platform-card">
+            <h2>
+                📺 YouTube
+                <span class="status working">WORKING</span>
+            </h2>
+            <p>Official YouTube Data API v3</p>
+            <input type="text" id="youtube-query" placeholder="Search query..." value="tech review">
+            <button onclick="testYouTube()">Test YouTube</button>
+            <div id="youtube-result" class="result"></div>
+        </div>
+
+        <!-- TikTok -->
+        <div class="platform-card">
+            <h2>
+                🎵 TikTok
+                <span class="status partial">PARTIAL</span>
+            </h2>
+            <p>Web scraping (may be rate limited)</p>
+            <input type="text" id="tiktok-query" placeholder="Search query..." value="fitness">
+            <button onclick="testTikTok()">Test TikTok</button>
+            <div id="tiktok-result" class="result"></div>
+        </div>
+
+        <!-- Instagram -->
+        <div class="platform-card">
+            <h2>
+                📸 Instagram
+                <span class="status partial">PARTIAL</span>
+            </h2>
+            <p>Public endpoints (limited data)</p>
+            <input type="text" id="instagram-query" placeholder="Search query..." value="fashion">
+            <button onclick="testInstagram()">Test Instagram</button>
+            <div id="instagram-result" class="result"></div>
+        </div>
+
+        <!-- Twitch -->
+        <div class="platform-card">
+            <h2>
+                🎮 Twitch
+                <span class="status pending">NEEDS CONFIG</span>
+            </h2>
+            <p>Requires Twitch API credentials</p>
+            <input type="text" id="twitch-query" placeholder="Search query..." value="gaming">
+            <button onclick="testTwitch()">Test Twitch</button>
+            <div id="twitch-result" class="result"></div>
+        </div>
+
+        <!-- Twitter -->
+        <div class="platform-card">
+            <h2>
+                🐦 Twitter/X
+                <span class="status pending">NEEDS CONFIG</span>
+            </h2>
+            <p>Requires Twitter API v2 credentials</p>
+            <input type="text" id="twitter-query" placeholder="Search query..." value="business">
+            <button onclick="testTwitter()">Test Twitter</button>
+            <div id="twitter-result" class="result"></div>
+        </div>
+
+        <!-- LinkedIn -->
+        <div class="platform-card">
+            <h2>
+                💼 LinkedIn
+                <span class="status pending">NEEDS CONFIG</span>
+            </h2>
+            <p>Requires LinkedIn OAuth</p>
+            <input type="text" id="linkedin-query" placeholder="Search query..." value="marketing">
+            <button onclick="testLinkedIn()">Test LinkedIn</button>
+            <div id="linkedin-result" class="result"></div>
+        </div>
+    </div>
+
+    <div class="platform-card" style="margin-top: 20px;">
+        <h2>🔥 Test All Platforms</h2>
+        <p>Search across all configured platforms at once</p>
+        <input type="text" id="all-query" placeholder="Search query..." value="tech">
+        <button onclick="testAll()">Search All Platforms</button>
+        <div id="all-result" class="result"></div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:3000/api';
+
+        async function testPlatform(platform, query, resultId) {
+            const resultDiv = document.getElementById(resultId);
+            resultDiv.innerHTML = '⏳ Loading...';
+            
+            try {
+                const response = await fetch(`${API_URL}/search/creators`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query, platform })
+                });
+                
+                const data = await response.json();
+                
+                if (data.results.length === 0) {
+                    resultDiv.innerHTML = `<span class="warning">⚠️ No results found</span>`;
+                    return;
+                }
+                
+                const realResults = data.results.filter(r => r.isReal);
+                
+                if (realResults.length > 0) {
+                    resultDiv.innerHTML = `
+                        <span class="success">✓ Found ${realResults.length} real creators!</span><br><br>
+                        <strong>Top 3:</strong><br>
+                        ${realResults.slice(0, 3).map(c => `
+                            • ${c.displayName} (@${c.username})<br>
+                            &nbsp;&nbsp;Followers: ${formatNumber(c.followerCount)}<br>
+                            &nbsp;&nbsp;Platform: ${c.platform}<br>
+                        `).join('<br>')}
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<span class="warning">⚠️ Using mock data (API not configured)</span>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<span class="error">✗ Error: ${error.message}</span>`;
+            }
+        }
+
+        function testYouTube() {
+            const query = document.getElementById('youtube-query').value;
+            testPlatform('youtube', query, 'youtube-result');
+        }
+
+        function testTikTok() {
+            const query = document.getElementById('tiktok-query').value;
+            testPlatform('tiktok', query, 'tiktok-result');
+        }
+
+        function testInstagram() {
+            const query = document.getElementById('instagram-query').value;
+            testPlatform('instagram', query, 'instagram-result');
+        }
+
+        function testTwitch() {
+            const query = document.getElementById('twitch-query').value;
+            testPlatform('twitch', query, 'twitch-result');
+        }
+
+        function testTwitter() {
+            const query = document.getElementById('twitter-query').value;
+            testPlatform('twitter', query, 'twitter-result');
+        }
+
+        function testLinkedIn() {
+            const query = document.getElementById('linkedin-query').value;
+            testPlatform('linkedin', query, 'linkedin-result');
+        }
+
+        async function testAll() {
+            const query = document.getElementById('all-query').value;
+            const resultDiv = document.getElementById('all-result');
+            resultDiv.innerHTML = '⏳ Searching all platforms...';
+            
+            try {
+                const response = await fetch(`${API_URL}/search/creators`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query, platform: 'all' })
+                });
+                
+                const data = await response.json();
+                
+                const realResults = data.results.filter(r => r.isReal);
+                const platformCounts = {};
+                
+                realResults.forEach(r => {
+                    platformCounts[r.platform] = (platformCounts[r.platform] || 0) + 1;
+                });
+                
+                if (realResults.length > 0) {
+                    resultDiv.innerHTML = `
+                        <span class="success">✓ Found ${realResults.length} real creators across ${Object.keys(platformCounts).length} platforms!</span><br><br>
+                        <strong>By Platform:</strong><br>
+                        ${Object.entries(platformCounts).map(([platform, count]) => 
+                            `• ${platform}: ${count} creators`
+                        ).join('<br>')}<br><br>
+                        <strong>Top 5 Overall:</strong><br>
+                        ${realResults.slice(0, 5).map(c => `
+                            • ${c.displayName} (${c.platform})<br>
+                            &nbsp;&nbsp;@${c.username} - ${formatNumber(c.followerCount)} followers<br>
+                        `).join('<br>')}
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<span class="warning">⚠️ No real data found. Configure API credentials.</span>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<span class="error">✗ Error: ${error.message}</span>`;
+            }
+        }
+
+        function formatNumber(num) {
+            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+            return num.toString();
+        }
+    </script>
+</body>
+</html>
