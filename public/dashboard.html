@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Stormy AI</title>
+    <meta name="description" content="Search and manage influencer campaigns with AI-powered tools">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="stylesheet" href="dashboard.css">
 </head>
@@ -62,26 +63,8 @@
                 <!-- Platform Selector -->
                 <div class="platform-selector">
                     <label class="filter-label">Platform</label>
-                    <div class="platform-buttons">
-                        <button class="platform-btn active" data-platform="youtube">
-                            <span>YouTube</span>
-                            <span class="platform-badge working">Active</span>
-                        </button>
-                        <button class="platform-btn" data-platform="tiktok">
-                            <span>TikTok</span>
-                            <span class="platform-badge limited">Limited</span>
-                        </button>
-                        <button class="platform-btn" data-platform="instagram">
-                            <span>Instagram</span>
-                            <span class="platform-badge limited">Limited</span>
-                        </button>
-                        <button class="platform-btn" data-platform="twitch">
-                            <span>Twitch</span>
-                            <span class="platform-badge inactive">Setup Required</span>
-                        </button>
-                        <button class="platform-btn" data-platform="all">
-                            <span>All Platforms</span>
-                        </button>
+                    <div class="platform-buttons" id="platform-buttons">
+                        <!-- Dynamically loaded -->
                     </div>
                 </div>
 
@@ -131,10 +114,8 @@
                     <h1 class="view-title">Analytics</h1>
                 </div>
 
-                <div class="empty-state">
-                    <h3>📊 Analytics Coming Soon</h3>
-                    <p>Create campaigns and add creators to see performance analytics here.</p>
-                    <p style="margin-top: 16px;">Track reach, engagement, ROI, and more once you start running campaigns.</p>
+                <div id="analytics-content">
+                    <!-- Dynamically loaded -->
                 </div>
             </div>
         </main>

@@ -8,7 +8,8 @@ const {
   searchInstagramCreators,
   searchTwitchCreators,
   searchTwitterCreators,
-  searchLinkedInCreators
+  searchLinkedInCreators,
+  searchSubstackCreators
 } = require('./scrapers');
 
 const app = express();
@@ -215,6 +216,13 @@ app.post('/api/search/creators', async (req, res) => {
       results = [...results, ...linkedinResults];
       if (linkedinResults.length > 0) realDataFetched = true;
     }
+    
+    // Substack
+    if (platformLower === 'substack' || platformLower === 'all') {
+      const substackResults = await searchSubstackCreators(query);
+      results = [...results, ...substackResults];
+      if (substackResults.length > 0) realDataFetched = true;
+    }
   }
   
   // If no real data found, use mock data
@@ -251,6 +259,13 @@ app.post('/api/search/creators', async (req, res) => {
   
   // Sort by follower count
   results.sort((a, b) => b.followerCount - a.followerCount);
+  
+  // Store creators in database for later use
+  results.forEach(creator => {
+    if (!db.creators.find(c => c.id === creator.id)) {
+      db.creators.push(creator);
+    }
+  });
   
   res.json({
     results: results.slice(0, 20),
@@ -324,6 +339,48 @@ app.post('/api/campaigns', (req, res) => {
 
 app.get('/api/campaigns', (req, res) => {
   res.json(db.campaigns);
+});
+
+app.get('/api/platforms/status', (req, res) => {
+  const status = {
+    youtube: {
+      active: !!process.env.YOUTUBE_API_KEY,
+      name: 'YouTube',
+      quality: 'full'
+    },
+    twitch: {
+      active: !!(process.env.TWITCH_CLIENT_ID && process.env.TWITCH_CLIENT_SECRET),
+      name: 'Twitch',
+      quality: 'full'
+    },
+    substack: {
+      active: true,
+      name: 'Substack',
+      quality: 'full'
+    },
+    tiktok: {
+      active: false,
+      name: 'TikTok',
+      quality: 'limited'
+    },
+    instagram: {
+      active: false,
+      name: 'Instagram',
+      quality: 'limited'
+    },
+    twitter: {
+      active: false,
+      name: 'Twitter',
+      quality: 'none'
+    },
+    linkedin: {
+      active: false,
+      name: 'LinkedIn',
+      quality: 'none'
+    }
+  };
+  
+  res.json(status);
 });
 
 app.post('/api/campaigns/:id/creators', (req, res) => {

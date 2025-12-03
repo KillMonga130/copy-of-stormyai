@@ -116,11 +116,31 @@ stormy-ai/
 
 ## Design System
 
-- **Spacing**: 8-point system (8px, 16px, 24px, 32px, etc.)
-- **Typography**: Inter font family with defined scale
-- **Colors**: Minimal palette with clear hierarchy
-- **Border Radius**: Consistent 8px
-- **Shadows**: Subtle elevation
+Built with premium, intentional design principles - no "vibe coded" patterns.
+
+### Foundation
+- **Spacing**: 8-point system (8px, 16px, 24px, 32px, 40px, 48px, 64px, 80px, 96px)
+- **Typography**: Inter font family with consistent scale and line heights
+- **Colors**: Minimal palette focused on clarity and hierarchy
+- **Border Radius**: Consistent 8px across all components
+- **Shadows**: Single elevation style for depth
+
+### UX Principles
+- **Loading States**: Every async action shows clear feedback
+- **Notifications**: Toast system for success/error messages
+- **Form Validation**: Real-time validation with visual feedback
+- **Accessibility**: Keyboard navigation, focus trapping, ARIA labels
+- **Consistency**: All components share the same design language
+
+### What We Avoid
+- ❌ Purple gradients (unless brand-specific)
+- ❌ Sparkle emojis as UI elements
+- ❌ Aggressive hover animations
+- ❌ Fake testimonials
+- ❌ Non-functional social icons
+- ❌ Generic taglines
+- ❌ Missing loading states
+- ❌ Inconsistent spacing/radiuses
 
 ## Next Steps
 

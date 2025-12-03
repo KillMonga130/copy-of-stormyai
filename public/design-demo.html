@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design System Demo - Stormy AI</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .demo-section {
+            padding: var(--space-8) 0;
+            border-bottom: 1px solid var(--color-border);
+        }
+        .demo-title {
+            font-size: var(--text-2xl);
+            font-weight: 600;
+            margin-bottom: var(--space-4);
+        }
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-3);
+            margin-bottom: var(--space-4);
+        }
+        .demo-item {
+            padding: var(--space-3);
+            background: var(--color-bg-secondary);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius);
+        }
+        .demo-label {
+            font-size: var(--text-sm);
+            color: var(--color-text-secondary);
+            margin-bottom: var(--space-1);
+        }
+        .spacing-box {
+            background: var(--color-primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--text-sm);
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">STORMY</div>
+                <nav class="nav">
+                    <a href="/" class="nav-link">Home</a>
+                    <a href="/dashboard" class="nav-link">Dashboard</a>
+                    <a href="/design-demo.html" class="nav-link">Design Demo</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero" style="padding: var(--space-8) 0;">
+            <div class="container">
+                <h1 class="hero-title" style="font-size: var(--text-4xl);">Design System Demo</h1>
+                <p class="hero-description">Interactive showcase of premium design principles</p>
+            </div>
+        </section>
+
+        <div class="container">
+            <!-- Spacing System -->
+            <section class="demo-section">
+                <h2 class="demo-title">8-Point Spacing System</h2>
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <div class="demo-label">8px (space-1)</div>
+                        <div class="spacing-box" style="height: 8px;">8</div>
+                    </div>
+                    <div class="demo-item">
+                        <div class="demo-label">16px (space-2)</div>
+                        <div class="spacing-box" style="height: 16px;">16</div>
+                    </div>
+                    <div class="demo-item">
+                        <div class="demo-label">24px (space-3)</div>
+                        <div class="spacing-box" style="height: 24px;">24</div>
+                    </div>
+                    <div class="demo-item">
+                        <div class="demo-label">32px (space-4)</div>
+                        <div class="spacing-box" style="height: 32px;">32</div>
+                    </div>
+                    <div class="demo-item">
+                        <div class="demo-label">48px (space-6)</div>
+                        <div class="spacing-box" style="height: 48px;">48</div>
+                    </div>
+                    <div class="demo-item">
+                        <div class="demo-label">64px (space-8)</div>
+                        <div class="spacing-box" style="height: 64px;">64</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Typography -->
+            <section class="demo-section">
+                <h2 class="demo-title">Typography Scale</h2>
+                <div style="display: flex; flex-direction: column; gap: var(--space-3);">
+                    <div>
+                        <div class="demo-label">Heading 1 (48px)</div>
+                        <h1 style="font-size: var(--text-5xl); font-weight: 600; line-height: var(--leading-tight);">The quick brown fox</h1>
+                    </div>
+                    <div>
+                        <div class="demo-label">Heading 2 (40px)</div>
+                        <h2 style="font-size: var(--text-4xl); font-weight: 600; line-height: var(--leading-tight);">The quick brown fox</h2>
+                    </div>
+                    <div>
+                        <div class="demo-label">Heading 3 (32px)</div>
+                        <h3 style="font-size: var(--text-3xl); font-weight: 600; line-height: var(--leading-tight);">The quick brown fox</h3>
+                    </div>
+                    <div>
+                        <div class="demo-label">Body Large (20px)</div>
+                        <p style="font-size: var(--text-xl); line-height: var(--leading-relaxed);">The quick brown fox jumps over the lazy dog</p>
+                    </div>
+                    <div>
+                        <div class="demo-label">Body (16px)</div>
+                        <p style="font-size: var(--text-base); line-height: var(--leading-normal);">The quick brown fox jumps over the lazy dog</p>
+                    </div>
+                    <div>
+                        <div class="demo-label">Small (14px)</div>
+                        <p style="font-size: var(--text-sm); line-height: var(--leading-normal);">The quick brown fox jumps over the lazy dog</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Buttons -->
+            <section class="demo-section">
+                <h2 class="demo-title">Buttons with Loading States</h2>
+                <div style="display: flex; gap: var(--space-2); flex-wrap: wrap; margin-bottom: var(--space-3);">
+                    <button class="btn btn-primary" id="demo-btn-1">Primary Button</button>
+                    <button class="btn btn-secondary">Secondary Button</button>
+                    <button class="btn btn-primary btn-large">Large Button</button>
+                    <button class="btn btn-primary" disabled>Disabled</button>
+                </div>
+                <p class="demo-label">Click the primary button to see loading state:</p>
+            </section>
+
+            <!-- Forms -->
+            <section class="demo-section">
+                <h2 class="demo-title">Form Elements</h2>
+                <form class="form" style="max-width: 400px;" id="demo-form">
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" placeholder="you@company.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-input" minlength="8" placeholder="Minimum 8 characters" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Message</label>
+                        <textarea class="form-input form-textarea" rows="3" placeholder="Your message"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit Form</button>
+                </form>
+            </section>
+
+            <!-- Notifications -->
+            <section class="demo-section">
+                <h2 class="demo-title">Notification System</h2>
+                <div style="display: flex; gap: var(--space-2);">
+                    <button class="btn btn-primary" id="show-success">Show Success</button>
+                    <button class="btn btn-secondary" id="show-error">Show Error</button>
+                </div>
+            </section>
+
+            <!-- Colors -->
+            <section class="demo-section">
+                <h2 class="demo-title">Color Palette</h2>
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <div class="demo-label">Primary</div>
+                        <div style="background: var(--color-primary); height: 64px; border-radius: var(--radius);"></div>
+                        <div style="font-size: var(--text-xs); margin-top: var(--space-1);">#0066ff</div>
+                    </div>
+                    <div class="demo-item">
+                        <div class="demo-label">Text</div>
+                        <div style="background: var(--color-text); height: 64px; border-radius: var(--radius);"></div>
+                        <div style="font-size: var(--text-xs); margin-top: var(--space-1);">#0a0a0a</div>
+                    </div>
+                    <div class="demo-item">
+                        <div class="demo-label">Text Secondary</div>
+                        <div style="background: var(--color-text-secondary); height: 64px; border-radius: var(--radius);"></div>
+                        <div style="font-size: var(--text-xs); margin-top: var(--space-1);">#525252</div>
+                    </div>
+                    <div class="demo-item">
+                        <div class="demo-label">Background</div>
+                        <div style="background: var(--color-bg); height: 64px; border-radius: var(--radius); border: 1px solid var(--color-border);"></div>
+                        <div style="font-size: var(--text-xs); margin-top: var(--space-1);">#ffffff</div>
+                    </div>
+                    <div class="demo-item">
+                        <div class="demo-label">Background Secondary</div>
+                        <div style="background: var(--color-bg-secondary); height: 64px; border-radius: var(--radius); border: 1px solid var(--color-border);"></div>
+                        <div style="font-size: var(--text-xs); margin-top: var(--space-1);">#fafafa</div>
+                    </div>
+                    <div class="demo-item">
+                        <div class="demo-label">Border</div>
+                        <div style="background: var(--color-border); height: 64px; border-radius: var(--radius);"></div>
+                        <div style="font-size: var(--text-xs); margin-top: var(--space-1);">#e5e5e5</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Cards -->
+            <section class="demo-section">
+                <h2 class="demo-title">Cards & Shadows</h2>
+                <div class="demo-grid">
+                    <div style="padding: var(--space-4); background: var(--color-bg); border: 1px solid var(--color-border); border-radius: var(--radius);">
+                        <h3 style="font-size: var(--text-lg); font-weight: 600; margin-bottom: var(--space-2);">Card with Border</h3>
+                        <p style="color: var(--color-text-secondary);">Consistent 8px radius, 1px border</p>
+                    </div>
+                    <div style="padding: var(--space-4); background: var(--color-bg); box-shadow: var(--shadow-lg); border-radius: var(--radius);">
+                        <h3 style="font-size: var(--text-lg); font-weight: 600; margin-bottom: var(--space-2);">Card with Shadow</h3>
+                        <p style="color: var(--color-text-secondary);">Subtle elevation for depth</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p class="footer-copyright">© 2025 Stormy AI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Loading state helper
+        function setButtonLoading(button, isLoading) {
+            if (isLoading) {
+                button.dataset.originalText = button.textContent;
+                button.textContent = 'Processing...';
+                button.disabled = true;
+                button.classList.add('btn-loading');
+            } else {
+                button.textContent = button.dataset.originalText;
+                button.disabled = false;
+                button.classList.remove('btn-loading');
+            }
+        }
+
+        // Notification system
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => notification.classList.add('notification-show'), 10);
+            
+            setTimeout(() => {
+                notification.classList.remove('notification-show');
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Demo button
+        document.getElementById('demo-btn-1').addEventListener('click', async function() {
+            setButtonLoading(this, true);
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            setButtonLoading(this, false);
+            showNotification('Button action completed!');
+        });
+
+        // Demo form
+        document.getElementById('demo-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const submitBtn = this.querySelector('button[type="submit"]');
+            setButtonLoading(submitBtn, true);
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            setButtonLoading(submitBtn, false);
+            this.reset();
+            showNotification('Form submitted successfully!');
+        });
+
+        // Notification demos
+        document.getElementById('show-success').addEventListener('click', () => {
+            showNotification('This is a success notification!', 'success');
+        });
+
+        document.getElementById('show-error').addEventListener('click', () => {
+            showNotification('This is an error notification!', 'error');
+        });
+    </script>
+</body>
+</html>

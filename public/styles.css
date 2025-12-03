@@ -542,6 +542,10 @@ body {
     border-color: var(--color-primary);
 }
 
+.form-input:invalid:not(:placeholder-shown) {
+    border-color: #ef4444;
+}
+
 .form-textarea {
     height: auto;
     padding: var(--space-2);
@@ -562,6 +566,12 @@ body {
 
 .form-link:hover {
     text-decoration: underline;
+}
+
+.form-error {
+    font-size: var(--text-sm);
+    color: #ef4444;
+    margin-top: var(--space-1);
 }
 
 /* FAQ */
@@ -710,6 +720,42 @@ body {
     font-size: var(--text-sm);
     color: var(--color-text-tertiary);
     text-align: center;
+}
+
+/* Loading states */
+.btn-loading {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Notification system */
+.notification {
+    position: fixed;
+    bottom: var(--space-3);
+    right: var(--space-3);
+    padding: var(--space-2) var(--space-3);
+    background: var(--color-text);
+    color: var(--color-bg);
+    border-radius: var(--radius);
+    font-size: var(--text-sm);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.3s;
+    z-index: 2000;
+}
+
+.notification-show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.notification-success {
+    background: var(--color-text);
+}
+
+.notification-error {
+    background: #ef4444;
 }
 
 /* Responsive */

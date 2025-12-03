@@ -29,19 +29,83 @@ function switchView(viewName) {
     // Load data for view
     if (viewName === 'campaigns') {
         loadCampaigns();
+    } else if (viewName === 'analytics') {
+        loadAnalytics();
     }
 }
 
 // Platform selector
 let selectedPlatform = 'youtube';
 
-document.querySelectorAll('.platform-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        document.querySelectorAll('.platform-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        selectedPlatform = btn.dataset.platform;
-    });
-});
+// Load platform status and render buttons dynamically
+async function loadPlatforms() {
+    try {
+        const response = await fetch(`${API_URL}/platforms/status`);
+        const platforms = await response.json();
+        
+        const container = document.getElementById('platform-buttons');
+        const buttons = [];
+        
+        // Add individual platform buttons
+        for (const [key, platform] of Object.entries(platforms)) {
+            if (!platform.active && platform.quality === 'none') continue; // Skip completely inactive
+            
+            let badge = '';
+            if (platform.quality === 'full' && platform.active) {
+                badge = '<span class="platform-badge working">Active</span>';
+            } else if (platform.quality === 'limited') {
+                badge = '<span class="platform-badge limited">Limited</span>';
+            } else if (!platform.active) {
+                badge = '<span class="platform-badge inactive">Setup Required</span>';
+            }
+            
+            buttons.push(`
+                <button class="platform-btn ${key === 'youtube' ? 'active' : ''}" data-platform="${key}">
+                    <span>${platform.name}</span>
+                    ${badge}
+                </button>
+            `);
+        }
+        
+        // Add "All Platforms" button
+        buttons.push(`
+            <button class="platform-btn" data-platform="all">
+                <span>All Platforms</span>
+            </button>
+        `);
+        
+        container.innerHTML = buttons.join('');
+        
+        // Add click handlers
+        document.querySelectorAll('.platform-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.platform-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                selectedPlatform = btn.dataset.platform;
+            });
+        });
+        
+    } catch (error) {
+        console.error('Failed to load platforms:', error);
+    }
+}
+
+// Load platforms on init
+loadPlatforms();
+
+// Loading state helper
+function setButtonLoading(button, isLoading) {
+    if (isLoading) {
+        button.dataset.originalText = button.textContent;
+        button.textContent = 'Searching...';
+        button.disabled = true;
+        button.classList.add('btn-loading');
+    } else {
+        button.textContent = button.dataset.originalText;
+        button.disabled = false;
+        button.classList.remove('btn-loading');
+    }
+}
 
 // Search functionality
 document.getElementById('search-btn').addEventListener('click', performSearch);
@@ -53,9 +117,23 @@ async function performSearch() {
     const query = document.getElementById('search-input').value;
     
     if (!query.trim()) {
-        alert('Please enter a search query');
+        showNotification('Please enter a search query', 'error');
         return;
     }
+    
+    const searchBtn = document.getElementById('search-btn');
+    const resultsContainer = document.getElementById('search-results');
+    
+    // Show loading skeleton
+    resultsContainer.innerHTML = `
+        <div class="loading-skeleton">
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+        </div>
+    `;
+    
+    setButtonLoading(searchBtn, true);
     
     const platform = selectedPlatform;
     const minFollowers = document.getElementById('min-followers').value;
@@ -75,12 +153,36 @@ async function performSearch() {
             })
         });
         
+        if (!response.ok) throw new Error('Search failed');
+        
         const data = await response.json();
         displayResults(data.results, data.source, data.platforms);
     } catch (error) {
         console.error('Search error:', error);
-        alert('Search failed. Please try again.');
+        resultsContainer.innerHTML = `
+            <div class="empty-state">
+                <p class="empty-state-text">Search failed. Please try again.</p>
+            </div>
+        `;
+        showNotification('Search failed. Please try again.', 'error');
+    } finally {
+        setButtonLoading(searchBtn, false);
     }
+}
+
+// Notification system
+function showNotification(message, type = 'success') {
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => notification.classList.add('notification-show'), 10);
+    
+    setTimeout(() => {
+        notification.classList.remove('notification-show');
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
 }
 
 function displayResults(creators, source = 'unknown', platforms = []) {
@@ -155,6 +257,9 @@ document.querySelector('#campaign-modal .modal-close').addEventListener('click',
 document.getElementById('campaign-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    setButtonLoading(submitBtn, true);
+    
     const name = document.getElementById('campaign-name').value;
     const description = document.getElementById('campaign-description').value;
     const budget = document.getElementById('campaign-budget').value;
@@ -171,14 +276,18 @@ document.getElementById('campaign-form').addEventListener('submit', async (e) =>
             })
         });
         
+        if (!response.ok) throw new Error('Campaign creation failed');
+        
         const campaign = await response.json();
         document.getElementById('campaign-modal').classList.remove('active');
         document.getElementById('campaign-form').reset();
         loadCampaigns();
-        alert('Campaign created successfully!');
+        showNotification('Campaign created successfully');
     } catch (error) {
         console.error('Campaign creation error:', error);
-        alert('Failed to create campaign. Please try again.');
+        showNotification('Failed to create campaign. Please try again.', 'error');
+    } finally {
+        setButtonLoading(submitBtn, false);
     }
 });
 
@@ -222,7 +331,7 @@ async function addToCampaign(creatorId) {
     const campaigns = await fetch(`${API_URL}/campaigns`).then(r => r.json());
     
     if (campaigns.length === 0) {
-        alert('Please create a campaign first.');
+        showNotification('Please create a campaign first.', 'error');
         return;
     }
     
@@ -230,21 +339,113 @@ async function addToCampaign(creatorId) {
     const campaign = campaigns[0];
     
     try {
-        await fetch(`${API_URL}/campaigns/${campaign.id}/creators`, {
+        const response = await fetch(`${API_URL}/campaigns/${campaign.id}/creators`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ creatorId })
         });
         
-        alert('Creator added to campaign!');
+        if (!response.ok) throw new Error('Failed to add creator');
+        
+        showNotification('Creator added to campaign');
     } catch (error) {
         console.error('Add to campaign error:', error);
-        alert('Failed to add creator to campaign.');
+        showNotification('Failed to add creator to campaign.', 'error');
     }
 }
 
 function viewProfile(creatorId) {
     alert(`Profile view for creator ${creatorId} - Full profile page would open here`);
+}
+
+// Analytics functionality
+async function loadAnalytics() {
+    try {
+        const campaigns = await fetch(`${API_URL}/campaigns`).then(r => r.json());
+        displayAnalytics(campaigns);
+    } catch (error) {
+        console.error('Load analytics error:', error);
+    }
+}
+
+function displayAnalytics(campaigns) {
+    const container = document.getElementById('analytics-content');
+    
+    if (campaigns.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <h3>📊 No Campaign Data Yet</h3>
+                <p>Create campaigns and add creators to see analytics here.</p>
+            </div>
+        `;
+        return;
+    }
+    
+    // Calculate overall stats
+    const totalCampaigns = campaigns.length;
+    const totalCreators = campaigns.reduce((sum, c) => sum + c.creators.length, 0);
+    const totalBudget = campaigns.reduce((sum, c) => sum + c.budget, 0);
+    const totalReach = campaigns.reduce((sum, c) => {
+        return sum + c.creators.reduce((s, cr) => s + (cr.followerCount || 0), 0);
+    }, 0);
+    
+    container.innerHTML = `
+        <div class="analytics-grid">
+            <div class="analytics-card">
+                <div class="analytics-card-label">Total Campaigns</div>
+                <div class="analytics-card-value">${totalCampaigns}</div>
+            </div>
+            <div class="analytics-card">
+                <div class="analytics-card-label">Total Creators</div>
+                <div class="analytics-card-value">${totalCreators}</div>
+            </div>
+            <div class="analytics-card">
+                <div class="analytics-card-label">Total Budget</div>
+                <div class="analytics-card-value">$${totalBudget.toLocaleString()}</div>
+            </div>
+            <div class="analytics-card">
+                <div class="analytics-card-label">Total Reach</div>
+                <div class="analytics-card-value">${formatNumber(totalReach)}</div>
+            </div>
+        </div>
+        
+        <div class="analytics-section">
+            <h2 class="analytics-section-title">Campaign Breakdown</h2>
+            ${campaigns.map(campaign => {
+                const reach = campaign.creators.reduce((sum, cr) => sum + (cr.followerCount || 0), 0);
+                const avgEngagement = campaign.creators.length > 0 
+                    ? (campaign.creators.reduce((sum, cr) => sum + (cr.engagementRate || 0), 0) / campaign.creators.length).toFixed(2)
+                    : 0;
+                
+                return `
+                    <div class="analytics-campaign">
+                        <div class="analytics-campaign-header">
+                            <div class="analytics-campaign-name">${campaign.name}</div>
+                            <div class="analytics-campaign-status">${campaign.status}</div>
+                        </div>
+                        <div class="analytics-campaign-stats">
+                            <div class="analytics-stat">
+                                <span class="analytics-stat-label">Creators:</span>
+                                <span class="analytics-stat-value">${campaign.creators.length}</span>
+                            </div>
+                            <div class="analytics-stat">
+                                <span class="analytics-stat-label">Budget:</span>
+                                <span class="analytics-stat-value">$${campaign.budget.toLocaleString()}</span>
+                            </div>
+                            <div class="analytics-stat">
+                                <span class="analytics-stat-label">Reach:</span>
+                                <span class="analytics-stat-value">${formatNumber(reach)}</span>
+                            </div>
+                            <div class="analytics-stat">
+                                <span class="analytics-stat-label">Avg Engagement:</span>
+                                <span class="analytics-stat-value">${avgEngagement}%</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('')}
+        </div>
+    `;
 }
 
 // Initial load - show clean empty state

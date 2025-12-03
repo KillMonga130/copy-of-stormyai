@@ -84,23 +84,95 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-// Form submissions
-document.getElementById('signup-form').addEventListener('submit', (e) => {
+// Trap focus in modal
+function trapFocus(modal) {
+    const focusableElements = modal.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
+
+    modal.addEventListener('keydown', (e) => {
+        if (e.key !== 'Tab') return;
+
+        if (e.shiftKey) {
+            if (document.activeElement === firstElement) {
+                lastElement.focus();
+                e.preventDefault();
+            }
+        } else {
+            if (document.activeElement === lastElement) {
+                firstElement.focus();
+                e.preventDefault();
+            }
+        }
+    });
+}
+
+trapFocus(signupModal);
+trapFocus(demoModal);
+
+// Loading state helper
+function setButtonLoading(button, isLoading) {
+    if (isLoading) {
+        button.dataset.originalText = button.textContent;
+        button.textContent = 'Processing...';
+        button.disabled = true;
+        button.classList.add('btn-loading');
+    } else {
+        button.textContent = button.dataset.originalText;
+        button.disabled = false;
+        button.classList.remove('btn-loading');
+    }
+}
+
+// Notification system
+function showNotification(message, type = 'success') {
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => notification.classList.add('notification-show'), 10);
+    
+    setTimeout(() => {
+        notification.classList.remove('notification-show');
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
+}
+
+// Form submissions with loading states
+document.getElementById('signup-form').addEventListener('submit', async (e) => {
     e.preventDefault();
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    
+    setButtonLoading(submitBtn, true);
+    
     const formData = {
         name: document.getElementById('signup-name').value,
         email: document.getElementById('signup-email').value,
         company: document.getElementById('signup-company').value,
         password: document.getElementById('signup-password').value
     };
+    
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
     console.log('Signup form submitted:', formData);
-    alert('Thanks for signing up! We\'ll send you an email to get started.');
+    
+    setButtonLoading(submitBtn, false);
     closeModal(signupModal);
     e.target.reset();
+    
+    showNotification('Account created successfully. Check your email to get started.');
 });
 
-document.getElementById('demo-form').addEventListener('submit', (e) => {
+document.getElementById('demo-form').addEventListener('submit', async (e) => {
     e.preventDefault();
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    
+    setButtonLoading(submitBtn, true);
+    
     const formData = {
         name: document.getElementById('demo-name').value,
         email: document.getElementById('demo-email').value,
@@ -108,8 +180,15 @@ document.getElementById('demo-form').addEventListener('submit', (e) => {
         teamSize: document.getElementById('demo-team-size').value,
         message: document.getElementById('demo-message').value
     };
+    
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
     console.log('Demo form submitted:', formData);
-    alert('Thanks for your interest! Our team will reach out within 24 hours.');
+    
+    setButtonLoading(submitBtn, false);
     closeModal(demoModal);
     e.target.reset();
+    
+    showNotification('Demo request submitted. Our team will reach out within 24 hours.');
 });
